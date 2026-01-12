@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHROMOSOME | Sequence Protocol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #ffffff;
+        }
+        body {
+            background-color: var(--bg);
+            color: #d1d5db;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px; /* Zoomed out base size */
+            letter-spacing: -0.01em;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0px; }
+        
+        .bg-img {
+            position: fixed;
+            inset: 0;
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.25;
+            z-index: -1;
+            filter: grayscale(100%);
+        }
+
+        .grid-line {
+            border: 0.5px solid var(--border);
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.02);
+            border: 0.5px solid var(--border);
+            backdrop-filter: blur(20px);
+        }
+
+        .scanline {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            position: absolute;
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .btn-precise {
+            padding: 8px 16px;
+            border: 0.5px solid var(--border);
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            transition: all 0.2s ease;
+            font-size: 11px;
+        }
+
+        .btn-precise:hover {
+            background: white;
+            color: black;
+            border-color: white;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-img"></div>
+
+    <!-- Minimal Header -->
+    <header class="fixed top-0 w-full z-50 border-b border-white/[0.05] bg-black/50 backdrop-blur-md">
+        <div class="max-w-[1400px] mx-auto h-14 px-6 flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <img src="a (7).png" alt="Logo" class="h-10 w-auto">
+                <div class="h-4 w-[1px] bg-white/10"></div>
+                <nav class="flex gap-6 text-[11px] uppercase tracking-widest text-slate-500 font-medium">
+                    <a href="#dashboard" class="hover:text-white transition-colors">Console</a>
+                    <a href="#distribution" class="hover:text-white transition-colors">Ledger</a>
+                    <a href="#token" class="hover:text-white transition-colors">Spec</a>
+                    <a href="https://x.com/ChromosomeSol" target="_blank" class="hover:text-white transition-colors">X.com</a>
+                </nav>
+            </div>
+            <div class="mono text-slate-500 text-[10px]">
+                STATUS: <span class="text-emerald-500 uppercase">Synchronized</span> // 2025.v1
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-32 pb-20 px-6 max-w-[1400px] mx-auto">
+        
+        <!-- Hero Section -->
+        <section class="mb-32 grid grid-cols-12 gap-6 items-end">
+            <div class="col-span-12 lg:col-span-7">
+                <img src="a (4).png" alt="Chromosome" class="w-full max-w-2xl mb-8">
+                <p class="text-lg text-slate-400 max-w-lg font-light leading-relaxed">
+                    A deterministic sequence protocol on Solana. Synthesizing market liquidity through biological consensus.
+                </p>
+            </div>
+            <div class="col-span-12 lg:col-span-5 flex flex-col gap-4 items-start lg:items-end">
+                <div class="flex gap-3">
+                    <a href="#dashboard" class="btn-precise">Initialize Console</a>
+                    <a href="#distribution" class="btn-precise opacity-50">View Ledger</a>
+                </div>
+                <div class="mono text-[10px] text-slate-600 text-right">
+                    LATENCY: 14ms<br>
+                    PROTOCOL: GEN_01<br>
+                    LOC: 41.40338, 2.17403
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Wave Console (Dashboard) -->
+        <section id="dashboard" class="mb-12">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-2 h-2 bg-white rounded-full"></div>
+                <h2 class="text-xs uppercase tracking-[0.2em] font-semibold">Live Wave Console</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-px bg-white/10 border border-white/10">
+                <!-- Wave Timer -->
+                <div class="panel p-8 relative overflow-hidden">
+                    <div class="scanline"></div>
+                    <label class="mono text-slate-500 uppercase mb-4 block">Cycle Timer</label>
+                    <div id="wave-timer" class="text-5xl font-light tracking-tighter text-white mb-2">05:00</div>
+                    <div class="w-full bg-white/5 h-[2px]">
+                        <div id="timer-progress" class="bg-white h-full transition-all duration-1000"></div>
+                    </div>
+                </div>
+
+                <!-- Holder Benefits -->
+                <div class="panel p-8">
+                    <label class="mono text-slate-500 uppercase mb-4 block">Yield Threshold</label>
+                    <div id="holder-count" class="text-5xl font-light tracking-tighter text-white mb-2">1</div>
+                    <div class="mono text-[10px] text-emerald-500">+1 SEQ/10S</div>
+                </div>
+
+                <!-- Emissions -->
+                <div class="panel p-8">
+                    <label class="mono text-slate-500 uppercase mb-4 block">Emissions Sync</label>
+                    <div id="token-distributed" class="text-5xl font-light tracking-tighter text-white mb-2">1,000</div>
+                    <div class="mono text-[10px] text-slate-500">REAL-TIME SETTLEMENT</div>
+                </div>
+
+                <!-- TX -->
+                <div class="panel p-8">
+                    <label class="mono text-slate-500 uppercase mb-4 block">Flow Velocity</label>
+                    <div id="tx-counter" class="text-5xl font-light tracking-tighter text-white mb-2">1</div>
+                    <div id="tx-status" class="mono text-[10px] text-slate-500">ANALYZING...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Distribution & Ledger -->
+        <section id="distribution" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-32">
+            <div class="lg:col-span-1 panel p-6">
+                <h3 class="text-[11px] uppercase tracking-widest mb-6 text-white border-b border-white/10 pb-4">Sequence Weights</h3>
+                <div id="wallet-list" class="space-y-4">
+                    <!-- Wallets -->
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 panel overflow-hidden">
+                <div class="p-4 bg-white/5 border-b border-white/10 flex justify-between items-center">
+                    <span class="text-[11px] uppercase tracking-widest text-white">Live Ledger Feed</span>
+                    <span class="mono text-[10px] text-slate-500">ID: 992-X-CHR</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="mono text-slate-500 border-b border-white/5">
+                            <tr>
+                                <th class="p-4 font-normal">TIME</th>
+                                <th class="p-4 font-normal">SEQUENCE_ID</th>
+                                <th class="p-4 font-normal">QUANTUM</th>
+                                <th class="p-4 font-normal">TYPE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="distribution-feed" class="mono text-slate-300">
+                            <!-- Feed Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Token Info -->
+        <section id="token" class="max-w-4xl border-l border-white/10 pl-12 py-12">
+            <h2 class="text-xs uppercase tracking-[0.3em] text-slate-500 mb-12">System Specifications</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+                <div>
+                    <span class="mono text-slate-600 block mb-2 uppercase">Symbol</span>
+                    <span class="text-2xl text-white font-light">$Chromosome</span>
+                </div>
+                <div>
+                    <span class="mono text-slate-600 block mb-2 uppercase">Core Network</span>
+                    <span class="text-2xl text-white font-light">Solana (SPL)</span>
+                </div>
+                <div class="md:col-span-2">
+                    <span class="mono text-slate-600 block mb-2 uppercase">Genesis Identity</span>
+                    <div class="flex items-center justify-between panel px-4 py-3">
+                        <span class="mono text-xs">Contract: coming_soon_xxxxxxxxxxxxxx</span>
+                        <span class="mono text-[10px] opacity-40 cursor-pointer hover:opacity-100 transition-opacity">COPY</span>
+                    </div>
+                </div>
+            </div>
+            <div class="prose prose-invert prose-sm text-slate-500 font-light leading-relaxed max-w-2xl">
+                <p>Chromosome operates as a closed-loop sequence protocol. Data integrity is maintained via automated wave cycles, ensuring proportional distribution without centralized friction. Genesis liquidity is locked; terminal access is permanent.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-white/5 py-12 px-6">
+        <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <img src="logo.png" alt="Logo" class="h-4 opacity-30">
+            <div class="flex gap-8 mono text-[10px] text-slate-500 uppercase">
+                <a href="https://x.com/ChromosomeSol" class="hover:text-white transition-colors">Twitter_X</a>
+                <a href="#" class="hover:text-white transition-colors">Telegram_Entry</a>
+                <a href="#" class="hover:text-white transition-colors">Explorer</a>
+            </div>
+            <div class="mono text-[10px] text-slate-700">
+                © 2025 CHROMOSOME_PROTOCOL // ALL_RIGHTS_RESERVED
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Logic: Consistent, Professional, No Drift ---
+
+        // 1. Timer (5:00 Loop)
+        let timeLeft = 300;
+        const timerEl = document.getElementById('wave-timer');
+        const progressEl = document.getElementById('timer-progress');
+        
+        setInterval(() => {
+            let mins = Math.floor(timeLeft / 60);
+            let secs = timeLeft % 60;
+            timerEl.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            progressEl.style.width = `${(timeLeft / 300) * 100}%`;
+            timeLeft = timeLeft <= 0 ? 300 : timeLeft - 1;
+        }, 1000);
+
+        // 2. Holders (+1 every 10s)
+        let holders = 1;
+        setInterval(() => {
+            holders++;
+            document.getElementById('holder-count').innerText = holders.toLocaleString();
+        }, 10000);
+
+        // 3. Distributed (+random every 5s)
+        let distributed = 1000;
+        setInterval(() => {
+            distributed += Math.floor(Math.random() * 65) + 5;
+            document.getElementById('token-distributed').innerText = distributed.toLocaleString();
+        }, 5000);
+
+        // 4. Transaction Logic (Stop at 30, then reset)
+        let tx = 1;
+        const txEl = document.getElementById('tx-counter');
+        const txStatus = document.getElementById('tx-status');
+        
+        function txEngine() {
+            if (tx < 30) {
+                tx++;
+                txEl.innerText = tx;
+                txStatus.innerText = "ACTIVE_FLOW";
+                setTimeout(txEngine, Math.random() * 2000 + 500);
+            } else {
+                txStatus.innerText = "STABLE_STATE";
+                setTimeout(() => { tx = 1; txEngine(); }, 8000);
+            }
+        }
+        txEngine();
+
+        // 5. Distribution Data
+        const wallets = ['7xRT', '4mPq', '9zKL', '1aBW', '6vNC', '3xQQ'];
+        const listEl = document.getElementById('wallet-list');
+        wallets.forEach((w, i) => {
+            const row = document.createElement('div');
+            row.className = "flex justify-between items-center";
+            const weight = (18.5 - (i * 2.1)).toFixed(2);
+            row.innerHTML = `<span class="mono text-slate-400">${w}...${Math.floor(Math.random()*9999)}</span>
+                             <span class="mono text-white">${weight}%</span>`;
+            listEl.appendChild(row);
+        });
+
+        // 6. Live Feed
+        const feed = document.getElementById('distribution-feed');
+        const eventTypes = ['EMISSION', 'SYNC_CYCLE', 'VERIFICATION', 'PAYOUT'];
+        
+        function addRow() {
+            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+            const row = document.createElement('tr');
+            row.className = "border-b border-white/[0.02] hover:bg-white/[0.02] transition-colors";
+            row.innerHTML = `
+                <td class="p-4 opacity-40">${time}</td>
+                <td class="p-4">${wallets[Math.floor(Math.random()*6)]}...${Math.floor(Math.random()*999)}</td>
+                <td class="p-4 text-white">${(Math.random()*150 + 5).toFixed(2)}</td>
+                <td class="p-4 opacity-60">${eventTypes[Math.floor(Math.random()*4)]}</td>
+            `;
+            if (feed.children.length > 8) feed.removeChild(feed.lastChild);
+            feed.insertBefore(row, feed.firstChild);
+            setTimeout(addRow, Math.random() * 3000 + 1000);
+        }
+        addRow();
+    </script>
+</body>
+</html>
